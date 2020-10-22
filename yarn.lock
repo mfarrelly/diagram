@@ -3234,6 +3234,11 @@
   resolved "https://registry.yarnpkg.com/@types/events/-/events-3.0.0.tgz#2862f3f58a9a7f7c3e78d79f130dd4d71c25c2a7"
   integrity sha512-EaObqwIvayI5a8dCzhFrjKzVwKLxjoG9T6Ppd5CEo07LRKfQ8Yokw54r5+Wq7FaBQ+yXRvQAYPrHwya1/UFt9g==
 
+"@types/fabric@^3.6.8":
+  version "3.6.8"
+  resolved "https://registry.yarnpkg.com/@types/fabric/-/fabric-3.6.8.tgz#7c073dc02595e610d9fc50b97d52b4dda0fa1bff"
+  integrity sha512-EqRgmWXQ0Hh9JKH8M0KyoeFLBt1TuQ88cLICynd8xXWM052mINp1ijdfvFY/jCN5QMI6ctv2gbI1kBkDFETSSQ==
+
 "@types/glob-base@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@types/glob-base/-/glob-base-0.3.0.tgz#a581d688347e10e50dd7c17d6f2880a10354319d"
