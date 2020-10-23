@@ -14,17 +14,22 @@ export function Diagram() {
         (type: string) => {
             if (type === "box") {
                 const newItems = append(
-                    { id: `${currentId}`, type: "box", position: new fabric.Point(10, 10) },
+                    { id: `${currentId}`, type: "box", position: new fabric.Point(10, 10), color: "#00B2FF", size: 20 },
                     userData?.items ?? []
                 ) as CanvasItem[];
 
                 setUserData({
                     items: newItems
                 });
-            }
-            else if (type === "circle") {
+            } else if (type === "circle") {
                 const newItems = append(
-                    { id: `${currentId}`, type: "circle", position: new fabric.Point(10, 10) },
+                    {
+                        id: `${currentId}`,
+                        type: "circle",
+                        position: new fabric.Point(10, 10),
+                        color: "#00B2FF",
+                        size: 20
+                    },
                     userData?.items ?? []
                 ) as CanvasItem[];
 

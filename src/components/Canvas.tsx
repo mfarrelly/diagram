@@ -15,6 +15,8 @@ export interface CanvasItem {
     id: string;
     type: CanvasItemType;
     position: fabric.Point;
+    color: string;
+    size: number;
 }
 
 export interface CanvasData {
@@ -44,17 +46,17 @@ export class Canvas extends React.Component<CanvasProps, CanvasState> {
             const rect = new fabric.Rect({
                 left: position.x,
                 top: position.y,
-                fill: "red",
-                width: 20,
-                height: 20
+                fill: item.color,
+                width: item.size,
+                height: item.size
             });
             this.state.canvas?.add(rect);
         } else if (type === "circle") {
             const rect = new fabric.Circle({
                 left: position.x,
                 top: position.y,
-                fill: "red",
-                radius: 20
+                fill: item.color,
+                radius: item.size
             });
             this.state.canvas?.add(rect);
         }
