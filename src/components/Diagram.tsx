@@ -1,23 +1,31 @@
 import React from "react";
 
+import { Canvas, CanvasData } from "./Canvas";
+import { Button, Paper } from "@material-ui/core";
+import { ButtonGroup } from "@material-ui/core";
 import { fabric } from "fabric";
-import { Canvas } from "./Canvas";
 
 export function Diagram() {
-    // const canvasDiv = <canvas></canvas>;
-    // const canvas = new fabric.Canvas(canvasDiv);
+    const [userData, setUserData] = React.useState<CanvasData>();
+    const [currentId, setCurrentId] = React.useState<number>(1);
 
-    // // create a rectangle object
-    // const rect = new fabric.Rect({
-    //     left: 100,
-    //     top: 100,
-    //     fill: "red",
-    //     width: 20,
-    //     height: 20
-    // });
+    const onAdd = React.useCallback(
+        (type: string) => {
+            setUserData({
+                items: (userData?.items ?? []).concat([{ id: `${currentId}`, type: "box", position: new fabric.Point(10, 10) }])
+            });
+            setCurrentId(currentId+1);
+        },
+        [userData, currentId]
+    );
 
-    // // "add" rectangle onto canvas
-    // canvas.add(rect);
-
-    return <div className="canvas-items"><Canvas id="c"/></div>;
+    return (
+        <Paper variant="outlined">
+            <ButtonGroup color="primary">
+                <Button onClick={() => alert("what")}>Add</Button>
+                <Button onClick={() => onAdd("box")}>Box</Button>
+            </ButtonGroup>
+            <Canvas id="c" canvasData={userData} onCanvasDataChange={setUserData} />;
+        </Paper>
+    );
 }
