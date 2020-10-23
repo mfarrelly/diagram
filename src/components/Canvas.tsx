@@ -86,7 +86,7 @@ export class Canvas extends React.Component<CanvasProps, CanvasState> {
         const { id } = this.props;
         return (
             <>
-                <canvas id={id} width={1800} height={900} />
+                <canvas id={id} width={900} height={300} />
             </>
         );
     }
