@@ -9,9 +9,11 @@ export interface CanvasProps {
     onCanvasDataChange?: (data: CanvasData) => void;
 }
 
+export type CanvasItemType = "arrow" | "line" | "box" | "circle";
+
 export interface CanvasItem {
     id: string;
-    type: "arrow" | "line" | "box";
+    type: CanvasItemType;
     position: fabric.Point;
 }
 
@@ -31,19 +33,31 @@ export class Canvas extends React.Component<CanvasProps, CanvasState> {
         };
     }
 
-    add(position: fabric.Point) {
+    add(item: CanvasItem) {
         if (!this.state.canvas) {
             return;
         }
 
-        const rect = new fabric.Rect({
-            left: position.x,
-            top: position.y,
-            fill: "red",
-            width: 20,
-            height: 20
-        });
-        this.state.canvas?.add(rect);
+        const { type, position } = { ...item };
+
+        if (type === "box") {
+            const rect = new fabric.Rect({
+                left: position.x,
+                top: position.y,
+                fill: "red",
+                width: 20,
+                height: 20
+            });
+            this.state.canvas?.add(rect);
+        } else if (type === "circle") {
+            const rect = new fabric.Circle({
+                left: position.x,
+                top: position.y,
+                fill: "red",
+                radius: 20
+            });
+            this.state.canvas?.add(rect);
+        }
     }
 
     componentDidUpdate(prevProps: CanvasProps): void {
@@ -55,7 +69,7 @@ export class Canvas extends React.Component<CanvasProps, CanvasState> {
         if (this.props.canvasData) {
             const newItems = R.difference(this.props.canvasData?.items ?? [], prevProps.canvasData?.items ?? []);
             for (const item of newItems) {
-                this.add(item.position);
+                this.add(item);
             }
         }
     }
