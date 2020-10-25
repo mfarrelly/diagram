@@ -1,9 +1,10 @@
 import React from "react";
 
-import { Canvas, CanvasData } from "./Canvas";
+import { Canvas, CanvasData, CanvasEvent } from "./Canvas";
 import { Button, Paper } from "@material-ui/core";
 import { ButtonGroup } from "@material-ui/core";
 import { fabric } from "fabric";
+import { append } from "ramda";
 
 export function Diagram() {
     const [userData, setUserData] = React.useState<CanvasData>();
@@ -11,10 +12,32 @@ export function Diagram() {
 
     const onAdd = React.useCallback(
         (type: string) => {
-            setUserData({
-                items: (userData?.items ?? []).concat([{ id: `${currentId}`, type: "box", position: new fabric.Point(10, 10) }])
-            });
-            setCurrentId(currentId+1);
+            if (type === "box") {
+                const newItems = append(
+                    { id: `${currentId}`, type: "box", position: new fabric.Point(10, 10), color: "#00B2FF", size: 20 },
+                    userData?.items ?? []
+                ) as CanvasEvent[];
+
+                setUserData({
+                    items: newItems
+                });
+            } else if (type === "circle") {
+                const newItems = append(
+                    {
+                        id: `${currentId}`,
+                        type: "circle",
+                        position: new fabric.Point(10, 10),
+                        color: "#00B2FF",
+                        size: 20
+                    },
+                    userData?.items ?? []
+                ) as CanvasEvent[];
+
+                setUserData({
+                    items: newItems
+                });
+            }
+            setCurrentId(currentId + 1);
         },
         [userData, currentId]
     );
@@ -24,6 +47,7 @@ export function Diagram() {
             <ButtonGroup color="primary">
                 <Button onClick={() => alert("what")}>Add</Button>
                 <Button onClick={() => onAdd("box")}>Box</Button>
+                <Button onClick={() => onAdd("circle")}>Circle</Button>
             </ButtonGroup>
             <Canvas id="c" canvasData={userData} onCanvasDataChange={setUserData} />;
         </Paper>

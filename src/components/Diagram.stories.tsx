@@ -7,7 +7,6 @@ export default {
     title: "Diagram"
 };
 
-
 export const isolated = () => {
-  return (<Diagram />);
-}
+    return <Diagram />;
+};
