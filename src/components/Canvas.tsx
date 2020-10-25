@@ -30,7 +30,7 @@ interface CanvasActionEvent {
 
 interface CanvasState {
     canvas: fabric.Canvas | null;
-    eventTypes: Record<string,CanvasActionEvent> | undefined;
+    eventTypes: Record<string, CanvasActionEvent> | undefined;
 }
 
 export class Canvas extends React.Component<CanvasProps, CanvasState> {
@@ -43,8 +43,7 @@ export class Canvas extends React.Component<CanvasProps, CanvasState> {
     }
 
     registerEventTypes() {
-        const x: Record<string, CanvasActionEvent> =
-        {
+        const x: Record<string, CanvasActionEvent> = {
             "box": {
                 type: "box",
                 do: (event: CanvasEvent) => {
@@ -61,7 +60,7 @@ export class Canvas extends React.Component<CanvasProps, CanvasState> {
             },
             "circle": {
                 type: "circle",
-                do: (event: CanvasEvent) => {
+                do: event => {
                     const { position } = { ...event };
                     const rect = new fabric.Circle({
                         left: position.x,
@@ -71,10 +70,22 @@ export class Canvas extends React.Component<CanvasProps, CanvasState> {
                     });
                     this.state.canvas?.add(rect);
                 }
+            },
+            "line": {
+                type: "line",
+                do: event => {
+                    const { position } = { ...event };
+                    const line = new fabric.Line([position.x, position.y, position.x + 150, position.y], {
+                        fill: event.color,
+                        stroke: event.color,
+                        strokeWidth: event.size
+                    });
+                    this.state.canvas?.add(line);
+                }
             }
         };
 
-        this.setState({ ...this.state, eventTypes: x })
+        this.setState({ ...this.state, eventTypes: x });
     }
 
     /**
@@ -94,9 +105,6 @@ export class Canvas extends React.Component<CanvasProps, CanvasState> {
         if (super.componentDidUpdate) {
             super.componentDidUpdate(prevProps, this.props as any);
         }
-        console.error(prevProps, this.props);
-
-
 
         if (this.props.canvasData) {
             const events = R.difference(this.props.canvasData?.items ?? [], prevProps.canvasData?.items ?? []);
