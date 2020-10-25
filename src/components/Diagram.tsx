@@ -14,7 +14,13 @@ export function Diagram() {
         (type: string) => {
             if (type === "box") {
                 const newItems = append(
-                    { id: `${currentId}`, type: "box", position: new fabric.Point(10, 10), color: "#00B2FF", size: 20 },
+                    {
+                        id: `${currentId}`,
+                        type: "box",
+                        position: new fabric.Point(10, 10),
+                        color: "#00B2FF",
+                        size: 20
+                    },
                     userData?.items ?? []
                 ) as CanvasEvent[];
 
@@ -26,6 +32,21 @@ export function Diagram() {
                     {
                         id: `${currentId}`,
                         type: "circle",
+                        position: new fabric.Point(10, 10),
+                        color: "#00B2FF",
+                        size: 20
+                    },
+                    userData?.items ?? []
+                ) as CanvasEvent[];
+
+                setUserData({
+                    items: newItems
+                });
+            } else if (type === "line") {
+                const newItems = append(
+                    {
+                        id: `${currentId}`,
+                        type: "line",
                         position: new fabric.Point(10, 10),
                         color: "#00B2FF",
                         size: 20
@@ -48,6 +69,7 @@ export function Diagram() {
                 <Button onClick={() => alert("what")}>Add</Button>
                 <Button onClick={() => onAdd("box")}>Box</Button>
                 <Button onClick={() => onAdd("circle")}>Circle</Button>
+                <Button onClick={() => onAdd("line")}>Line</Button>
             </ButtonGroup>
             <Canvas id="c" canvasData={userData} onCanvasDataChange={setUserData} />;
         </Paper>
