@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Canvas, CanvasData, CanvasItem } from "./Canvas";
+import { Canvas, CanvasData, CanvasEvent } from "./Canvas";
 import { Button, Paper } from "@material-ui/core";
 import { ButtonGroup } from "@material-ui/core";
 import { fabric } from "fabric";
@@ -16,7 +16,7 @@ export function Diagram() {
                 const newItems = append(
                     { id: `${currentId}`, type: "box", position: new fabric.Point(10, 10), color: "#00B2FF", size: 20 },
                     userData?.items ?? []
-                ) as CanvasItem[];
+                ) as CanvasEvent[];
 
                 setUserData({
                     items: newItems
@@ -31,7 +31,7 @@ export function Diagram() {
                         size: 20
                     },
                     userData?.items ?? []
-                ) as CanvasItem[];
+                ) as CanvasEvent[];
 
                 setUserData({
                     items: newItems

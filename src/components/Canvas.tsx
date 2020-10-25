@@ -9,57 +9,85 @@ export interface CanvasProps {
     onCanvasDataChange?: (data: CanvasData) => void;
 }
 
-export type CanvasItemType = "arrow" | "line" | "box" | "circle";
+export type CanvasEventType = "arrow" | "line" | "box" | "circle";
 
-export interface CanvasItem {
+export interface CanvasEvent {
     id: string;
-    type: CanvasItemType;
+    type: CanvasEventType;
     position: fabric.Point;
     color: string;
     size: number;
 }
 
 export interface CanvasData {
-    items: CanvasItem[];
+    items: CanvasEvent[];
+}
+
+interface CanvasActionEvent {
+    do: (_: CanvasEvent) => void;
+    type: string;
 }
 
 interface CanvasState {
     canvas: fabric.Canvas | null;
+    eventTypes: Record<string,CanvasActionEvent> | undefined;
 }
 
 export class Canvas extends React.Component<CanvasProps, CanvasState> {
     constructor(props: CanvasProps) {
         super(props);
         this.state = {
-            canvas: null
+            canvas: null,
+            eventTypes: undefined
         };
     }
 
-    add(item: CanvasItem) {
+    registerEventTypes() {
+        const x: Record<string, CanvasActionEvent> =
+        {
+            "box": {
+                type: "box",
+                do: (event: CanvasEvent) => {
+                    const { position } = { ...event };
+                    const rect = new fabric.Rect({
+                        left: position.x,
+                        top: position.y,
+                        fill: event.color,
+                        width: event.size,
+                        height: event.size
+                    });
+                    this.state.canvas?.add(rect);
+                }
+            },
+            "circle": {
+                type: "circle",
+                do: (event: CanvasEvent) => {
+                    const { position } = { ...event };
+                    const rect = new fabric.Circle({
+                        left: position.x,
+                        top: position.y,
+                        fill: event.color,
+                        radius: event.size
+                    });
+                    this.state.canvas?.add(rect);
+                }
+            }
+        };
+
+        this.setState({ ...this.state, eventTypes: x })
+    }
+
+    /**
+     * Process a CanvasEvent.
+     *
+     *
+     */
+    addEvent(item: CanvasEvent) {
         if (!this.state.canvas) {
             return;
         }
 
-        const { type, position } = { ...item };
-
-        if (type === "box") {
-            const rect = new fabric.Rect({
-                left: position.x,
-                top: position.y,
-                fill: item.color,
-                width: item.size,
-                height: item.size
-            });
-            this.state.canvas?.add(rect);
-        } else if (type === "circle") {
-            const rect = new fabric.Circle({
-                left: position.x,
-                top: position.y,
-                fill: item.color,
-                radius: item.size
-            });
-            this.state.canvas?.add(rect);
-        }
+        this.state.eventTypes?.[item.type]?.do(item);
     }
 
     componentDidUpdate(prevProps: CanvasProps): void {
@@ -68,10 +96,12 @@ export class Canvas extends React.Component<CanvasProps, CanvasState> {
         }
         console.error(prevProps, this.props);
 
+
+
         if (this.props.canvasData) {
-            const newItems = R.difference(this.props.canvasData?.items ?? [], prevProps.canvasData?.items ?? []);
-            for (const item of newItems) {
-                this.add(item);
+            const events = R.difference(this.props.canvasData?.items ?? [], prevProps.canvasData?.items ?? []);
+            for (const event of events) {
+                this.addEvent(event);
             }
         }
     }
@@ -79,6 +109,7 @@ export class Canvas extends React.Component<CanvasProps, CanvasState> {
     componentDidMount() {
         const canvas = new fabric.Canvas(this.props.id);
 
+        this.registerEventTypes();
         this.setState({ canvas: canvas });
     }
 
